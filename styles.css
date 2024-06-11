@@ -48,12 +48,13 @@ video {
     position: absolute;
     bottom: 140px; /* Sposta le informazioni più in alto */
     right: 20px;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.279);
     padding: 8px;
     font-size: 16px;
     font-weight: Bold;
-    border-radius: 20px;
+    border-radius: 30px;
     color: white;
+    font-style: unset;
 }
 
 button {
@@ -63,9 +64,9 @@ button {
     background-color: #32b067;
     border: none;
     color: white;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
-    border-radius: 15px;
+    border-radius: 20px;
     cursor: pointer;
 }
 
