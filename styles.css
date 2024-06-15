@@ -24,6 +24,7 @@ body {
     top: 50px;
     bottom: 0;
     width: 100%;
+    overflow: hidden;
     overflow-y: auto;
     scroll-snap-type: y mandatory;
 }
