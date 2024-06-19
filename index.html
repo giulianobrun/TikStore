@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div id="pre-loader"></div>
     <div id="banner">TIK STORE</div>
     <div id="video-container">
         <div class="video-slide" data-price="€29.99" data-link="https://www.amazon.it/">
@@ -111,6 +112,14 @@
         </div>
     </div>
     <script src="script.js"></script>
+    <script>
+        var loader = document.getElementById("pre-loader");
+        window.addEventListener("load", function(){
+            setTimeout(function(){
+                loader.style.display = "none";
+            }, 1500)
+        });
+    </script>
 </body>
 </html>
 
