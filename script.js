@@ -1,57 +1,51 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const videoSlides = document.querySelectorAll('.video-slide');
-    const options = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.5
-    };
+  const videoSlides = document.querySelectorAll('.video-slide');
+  let audioActive = false; // Stato audio globale
 
-    const callback = (entries, observer) => {
-        entries.forEach(entry => {
-            const video = entry.target.querySelector('video');
-            if (video) {
-                if (entry.isIntersecting) {
-                    console.log('Playing video:', video.src);
-                    video.play();
-                } else {
-                    console.log('Pausing video:', video.src);
-                    video.pause();
-                }
-            } else {
-                console.error('No video found in slide:', entry.target);
-            }
-        });
-    };
+  const options = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.5
+  };
 
-    const observer = new IntersectionObserver(callback, options);
-
-    videoSlides.forEach(slide => {
-        observer.observe(slide);
-
-        const video = slide.querySelector('video');
-        if (video) {
-            // Assicurarsi che il video sia pronto per la riproduzione
-            video.addEventListener('canplaythrough', () => {
-                console.log('Video can play through:', video.src);
-            });
-
-            // Garantire che il video sia precaricato
-            video.preload = 'auto';
-            video.muted = true; // Per consentire l'autoplay
-
-            // Riproduci il video al caricamento della pagina
-            video.play();
-
-            video.addEventListener('click', () => {
-                const allVideos = document.querySelectorAll('video');
-                const isMuted = video.muted;
-                allVideos.forEach(v => {
-                    v.muted = !isMuted;
-                });
-                console.log(isMuted ? 'Unmuting all videos' : 'Muting all videos');
-            });
+  const callback = (entries, observer) => {
+    entries.forEach(entry => {
+      const video = entry.target.querySelector('video');
+      if (video) {
+        if (entry.isIntersecting) {
+          video.muted = !audioActive; // Muto se audio non attivo
+          video.play();
         } else {
-            console.error('No video found in slide:', slide);
+          video.pause();
+          video.currentTime = 0;
         }
+      }
     });
+  };
+
+  const observer = new IntersectionObserver(callback, options);
+
+  videoSlides.forEach(slide => {
+    observer.observe(slide);
+    const video = slide.querySelector('video');
+    if (video) {
+      video.preload = 'auto';
+      video.muted = true; // TUTTI i video partono in mute
+    }
+  });
+
+  // Touch/click su tutto lo schermo per attivare/disattivare audio
+  document.body.addEventListener('click', () => {
+    audioActive = !audioActive;
+    videoSlides.forEach(slide => {
+      const video = slide.querySelector('video');
+      if (video) {
+        // Solo il video della slide visibile reagisce (se vuoi solo lui)
+        if (slide.getBoundingClientRect().top < window.innerHeight &&
+            slide.getBoundingClientRect().bottom > 0) {
+          video.muted = !audioActive;
+        }
+      }
+    });
+  });
 });
