@@ -486,7 +486,25 @@
     <!-- Aggiungi altre slide con la stessa struttura se vuoi -->
   </div>
   <script src="script.js"></script>
+<script>
+  document.querySelectorAll('.amazon-btn').forEach(function(button){
+    button.addEventListener('click', function(e){
+      e.preventDefault();
+      var numBtn = button.getAttribute('data-bottone');
+      var linkAmazon = button.getAttribute('data-link');
+      gtag('event', 'click_amazon', {
+        'event_category': 'Amazon Button',
+        'event_label': numBtn,
+        'event_value': linkAmazon
+      });
+      setTimeout(function(){
+        window.location.href = linkAmazon;
+      }, 200); // Permette a GA di tracciare l'evento prima del redirect!
+    });
+  });
+</script>
 </body>
 </html>
+
 
 
