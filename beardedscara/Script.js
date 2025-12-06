@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const video = entry.target.querySelector('video');
       if (video) {
         if (entry.isIntersecting) {
-          video.muted = !audioActive; // Muto se audio non attivo
+          video.muted = !audioActive; // Muto se audio non è attivo
           video.play();
         } else {
           video.pause();
@@ -49,3 +49,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
