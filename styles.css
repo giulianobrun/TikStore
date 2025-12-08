@@ -84,3 +84,32 @@ button:hover {
    z-index: 100;
 }
 
+/* Desktop: layout a barra verticale centrata */
+@media (min-width: 992px) {
+  body {
+    background-color: #121212;
+    overflow: hidden; /* niente scroll orizzontale */
+  }
+
+  #video-container {
+    position: relative;
+    width: 430px;          /* larghezza “telefono” */
+    max-width: 430px;
+    margin: 50px auto 0;   /* centrato orizzontalmente, sotto il banner */
+    height: calc(100vh - 50px);
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+  }
+
+  .video-slide {
+    height: calc(100vh - 50px); /* ogni slide altezza viewport meno banner */
+  }
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;     /* mantieni feeling TikTok ma dentro la colonna */
+  }
+}
+
+
