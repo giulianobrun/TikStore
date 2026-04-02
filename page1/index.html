@@ -31,18 +31,37 @@
     :root { --color-bg: #18181B; --color-text: #FAFAFA; --glow-color-rgb: 249,115,22; }
     *, *::before, *::after { box-sizing: border-box; }
     html, body { background: var(--color-bg); margin: 0; }
-    body { font-family: var(--font-body); color: var(--color-text); overflow: hidden; height: 100vh; width: 100vw; }
-    .deck { width: 100vw; height: 100vh; position: relative; }
-    .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--color-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transform: scale(0.95); transition: opacity 0.7s ease, transform 0.7s ease; pointer-events: none; overflow: hidden; }
+    
+    /* Aggiunto height: 100dvh per ignorare la barra degli indirizzi su mobile */
+    body { font-family: var(--font-body); color: var(--color-text); overflow: hidden; height: 100vh; height: 100dvh; width: 100vw; }
+    .deck { width: 100vw; height: 100vh; height: 100dvh; position: relative; }
+    
+    /* Rimosso justify-content: center per evitare il taglio del contenuto in overflow su mobile */
+    .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--color-bg); display: flex; flex-direction: column; align-items: center; opacity: 0; transform: scale(0.95); transition: opacity 0.7s ease, transform 0.7s ease; pointer-events: none; overflow: hidden; }
     .slide.active { opacity: 1; transform: scale(1); pointer-events: all; }
-    /* RIMOSSO IL translateY NEGATIVO CHE TAGLIAVA IL CONTENUTO IN ALTO */
-    .slide > .content { position: relative; z-index: 2; width: 100%; max-width: 1180px; padding: clamp(1rem, 2.6vw, 2.6rem) clamp(1.2rem, 3vw, 3rem) 7.2rem; transform: translateY(0); }
-    .nav-controls { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 16px; z-index: 100; background: rgba(24,24,27,0.7); backdrop-filter: blur(10px); padding: 10px 24px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); }
-    .nav-btn { width: 40px; height: 40px; border: none; background: rgba(255,255,255,0.06); color: var(--color-text); border-radius: 50%; font-size: 1.2rem; cursor: pointer; }
-    .slide-dots { display: flex; gap: 8px; }
-    .slide-dots .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.18); cursor: pointer; transition: all .3s; }
+    
+    /* Scroll abilitato su mobile e nascosta la barra di scorrimento */
+    .slide > .content { 
+        position: relative; 
+        z-index: 2; 
+        width: 100%; 
+        max-width: 1180px; 
+        max-height: 100%; /* Sostituito 100vh con 100% per limitarsi al contenitore padre */
+        margin: auto 0; /* Centra verticalmente il div senza tagliarlo se in overflow */
+        overflow-y: auto;
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+        padding: clamp(2rem, 5vw, 4rem) clamp(1.2rem, 3vw, 3rem) 7rem; 
+        transform: translateY(0); 
+    }
+    .slide > .content::-webkit-scrollbar { display: none; /* Chrome, Safari and Opera */ }
+    
+    .nav-controls { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; z-index: 100; background: rgba(24,24,27,0.85); backdrop-filter: blur(10px); padding: 8px 16px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); width: max-content; max-width: 90vw; }
+    .nav-btn { width: 36px; height: 36px; border: none; background: rgba(255,255,255,0.08); color: var(--color-text); border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .slide-dots { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+    .slide-dots .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.18); cursor: pointer; transition: all .3s; }
     .slide-dots .dot.active { background: #F97316; transform: scale(1.25); }
-    .slide-counter { font-size: .82rem; color: #A1A1AA; min-width: 48px; text-align: center; }
+    .slide-counter { font-size: .8rem; color: #A1A1AA; min-width: 42px; text-align: center; font-weight: 500; }
     .reveal { opacity: 0; transform: translateY(20px); }
     .gradient-mesh { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
     .blob { position: absolute; border-radius: 50%; filter: blur(80px); animation: float-slow 12s ease-in-out infinite; }
@@ -55,10 +74,11 @@
     .slide::before { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); background-size:256px 256px; opacity:.03; mix-blend-mode:overlay; }
     .slide::after { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background: radial-gradient(ellipse at center, transparent 52%, rgba(0,0,0,.45) 100%); }
     .stat-glow { animation: glow-pulse 3s ease-in-out infinite; }
-    .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10); backdrop-filter: blur(10px); border-radius: 22px; }
+    .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10); backdrop-filter: blur(10px); border-radius: 18px; }
     .bar-track { height: 18px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; }
     .bar-fill { height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg,#F97316,#14B8A6); }
-    .mouse-spotlight { position:fixed; inset:0; z-index:99; pointer-events:none; }
+    .mouse-spotlight { position:fixed; inset:0; z-index:99; pointer-events:none; display: none; }
+    @media (min-width: 768px) { .mouse-spotlight { display: block; } }
     .mini { font-size: .8rem; color: #A1A1AA; }
   </style>
 </head>
@@ -72,23 +92,23 @@
       <div class="blob" style="width:240px;height:240px;top:42%;left:16%;background:#FEF3C7;opacity:.09"></div>
     </div>
     <canvas class="particle-canvas" style="position:absolute;inset:0;z-index:1"></canvas>
-    <div class="content text-center">
-      <div class="text-[70px] mb-4 animate-[float_3s_ease-in-out_infinite] reveal">♾️</div>
-      <h1 class="font-display text-[clamp(1.8rem,4vw,3.2rem)] leading-[0.95] tracking-tight mb-3 reveal bg-linear-to-br from-accent-1 via-accent-3 to-accent-2 bg-clip-text text-transparent">KONVI SUBSCRIPTION ASSET</h1>
-      <p class="text-[clamp(0.85rem,1.2vw,1.1rem)] text-text-secondary tracking-[4px] uppercase reveal">Predictable monthly revenue through member-only auction access</p>
-      <p class="mt-6 text-base max-w-3xl mx-auto text-text-secondary reveal">A recurring-investment product that turns episodic launches into a retained membership loop.</p>
+    <div class="content text-center flex flex-col justify-center min-h-[80vh]">
+      <div class="text-[50px] md:text-[70px] mb-4 animate-[float_3s_ease-in-out_infinite] reveal">♾️</div>
+      <h1 class="font-display text-[clamp(2rem,6vw,3.2rem)] leading-[0.95] tracking-tight mb-3 reveal bg-linear-to-br from-accent-1 via-accent-3 to-accent-2 bg-clip-text text-transparent">KONVI SUBSCRIPTION ASSET</h1>
+      <p class="text-[clamp(0.75rem,1.2vw,1.1rem)] text-text-secondary tracking-[3px] md:tracking-[4px] uppercase reveal">Predictable monthly revenue through member-only auction access</p>
+      <p class="mt-6 text-sm md:text-base max-w-3xl mx-auto text-text-secondary reveal">A recurring-investment product that turns episodic launches into a retained membership loop.</p>
     </div>
   </div>
 
   <div class="slide" data-slide="2">
     <div class="gradient-mesh"><div class="blob" style="width:360px;height:360px;top:-70px;right:-70px;background:#F97316;opacity:.08"></div><div class="blob" style="width:260px;height:260px;bottom:-60px;left:-30px;background:#14B8A6;opacity:.07"></div></div>
     <div class="content">
-      <h2 class="font-display text-3xl mb-6 reveal">THE CORE PROBLEMS</h2>
-      <div class="grid grid-cols-2 gap-5 mt-4">
-        <div class="card p-6 reveal"><div class="text-3xl mb-2">📉</div><h3 class="text-xl font-bold mb-2">Revenue is campaign-driven</h3><p class="text-base text-text-secondary">One-off launches create spikes, but fixed salaries and operating costs need a more stable monthly base.</p></div>
-        <div class="card p-6 reveal"><div class="text-3xl mb-2">🧲</div><h3 class="text-xl font-bold mb-2">Retention must be stronger</h3><p class="text-base text-text-secondary">Users invest in individual deals, but there is room for a membership-style habit that brings them back every month.</p></div>
-        <div class="card p-6 reveal"><div class="text-3xl mb-2">💸</div><h3 class="text-xl font-bold mb-2">CAC and CRC extremely high</h3><p class="text-base text-text-secondary">At the moment the CAC and CRC are not under control, in the long period referral and disocunts codes become a problem.</p></div>
-        <div class="card p-6 reveal"><div class="text-3xl mb-2">❌👀</div><h3 class="text-xl font-bold mb-2">Limited ability to predict capital raising</h3><p class="text-base text-text-secondary">The core issue lies in our business model: it undermines accurate capital raising forecasts, slowing growth and predictability.</p></div>
+      <h2 class="font-display text-2xl md:text-3xl mb-4 md:mb-6 reveal">THE CORE PROBLEMS</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 mt-4">
+        <div class="card p-5 md:p-6 reveal"><div class="text-2xl md:text-3xl mb-2">📉</div><h3 class="text-lg md:text-xl font-bold mb-2">Revenue is campaign-driven</h3><p class="text-sm md:text-base text-text-secondary">One-off launches create spikes, but fixed salaries and operating costs need a more stable monthly base.</p></div>
+        <div class="card p-5 md:p-6 reveal"><div class="text-2xl md:text-3xl mb-2">🧲</div><h3 class="text-lg md:text-xl font-bold mb-2">Retention must be stronger</h3><p class="text-sm md:text-base text-text-secondary">Users invest in individual deals, but there is room for a membership-style habit that brings them back every month.</p></div>
+        <div class="card p-5 md:p-6 reveal"><div class="text-2xl md:text-3xl mb-2">💸</div><h3 class="text-lg md:text-xl font-bold mb-2">CAC and CRC extremely high</h3><p class="text-sm md:text-base text-text-secondary">At the moment the CAC and CRC are not under control, in the long run referral and discounts codes become a problem.</p></div>
+        <div class="card p-5 md:p-6 reveal"><div class="text-2xl md:text-3xl mb-2">❌👀</div><h3 class="text-lg md:text-xl font-bold mb-2">Limited ability to predict capital raising</h3><p class="text-sm md:text-base text-text-secondary">The core issue lies in our business model: it undermines accurate capital raising forecasts, slowing growth and predictability.</p></div>
       </div>
     </div>
   </div>
@@ -96,22 +116,22 @@
   <div class="slide" data-slide="3">
     <div class="gradient-mesh"><div class="blob" style="width:380px;height:380px;top:-60px;right:-60px;background:#14B8A6;opacity:.09"></div><div class="blob" style="width:220px;height:220px;bottom:-30px;left:0;background:#FEF3C7;opacity:.06"></div></div>
     <div class="content">
-      <h2 class="font-display text-3xl mb-6 reveal">THE PRODUCT</h2>
-      <div class="grid grid-cols-[1.2fr_.8fr] gap-6 items-center">
-        <div class="card p-6 reveal">
+      <h2 class="font-display text-2xl md:text-3xl mb-4 md:mb-6 reveal">THE PRODUCT</h2>
+      <div class="grid grid-cols-1 md:grid-cols-[1.2fr_.8fr] gap-5 md:gap-6 items-center">
+        <div class="card p-5 md:p-6 reveal">
           <div class="mini uppercase tracking-[3px] mb-2">Concept</div>
-          <p class="text-xl leading-snug text-text">A continuously open subscription asset where members invest a fixed amount every month, keep their position active while subscribed, and receive access to one exclusive auction opportunity each month.</p>
-          <div class="grid grid-cols-3 gap-3 mt-6">
-            <div class="bg-black/20 rounded-2xl p-4"><div class="text-2xl mb-1">€200</div><div class="mini">Example monthly contribution</div></div>
-            <div class="bg-black/20 rounded-2xl p-4"><div class="text-2xl mb-1">1x</div><div class="mini">Members-only auction every month</div></div>
-            <div class="bg-black/20 rounded-2xl p-4"><div class="text-2xl mb-1">∞</div><div class="mini">Open product, not a one-time sale</div></div>
+          <p class="text-lg md:text-xl leading-snug text-text">A continuously open subscription asset where members invest a fixed amount every month, keep their position active while subscribed, and receive access to one exclusive auction opportunity each month.</p>
+          <div class="grid grid-cols-3 gap-2 md:gap-3 mt-5 md:mt-6">
+            <div class="bg-black/20 rounded-2xl p-3 md:p-4 text-center md:text-left"><div class="text-xl md:text-2xl mb-1">€200</div><div class="mini leading-tight">Example monthly contribution</div></div>
+            <div class="bg-black/20 rounded-2xl p-3 md:p-4 text-center md:text-left"><div class="text-xl md:text-2xl mb-1">1x</div><div class="mini leading-tight">Members-only auction every month</div></div>
+            <div class="bg-black/20 rounded-2xl p-3 md:p-4 text-center md:text-left"><div class="text-xl md:text-2xl mb-1">∞</div><div class="mini leading-tight">Open product, not a one-time sale</div></div>
           </div>
         </div>
         <div class="reveal">
-          <div class="card p-6">
-            <div class="text-4xl mb-2">🔒</div>
-            <h3 class="text-xl font-bold mb-2">Membership logic</h3>
-            <ul class="text-base text-text-secondary space-y-2 list-disc pl-5">
+          <div class="card p-5 md:p-6">
+            <div class="text-3xl md:text-4xl mb-2">🔒</div>
+            <h3 class="text-lg md:text-xl font-bold mb-2">Membership logic</h3>
+            <ul class="text-sm md:text-base text-text-secondary space-y-2 list-disc pl-5">
               <li>Fixed monthly payment.</li>
               <li>Position stays active while subscribed.</li>
               <li>Monthly exclusive auction access.</li>
@@ -126,14 +146,13 @@
   <div class="slide" data-slide="4">
     <div class="gradient-mesh"><div class="blob" style="width:340px;height:340px;top:-90px;right:-80px;background:#F97316;opacity:.08"></div><div class="blob" style="width:280px;height:280px;bottom:-70px;left:-20px;background:#14B8A6;opacity:.06"></div></div>
     <div class="content">
-      <h2 class="font-display text-3xl mb-6 reveal">WHY IT FITS KONVI</h2>
-      <div class="grid grid-cols-3 gap-5">
-        <div class="card p-6 reveal"><div class="text-3xl mb-2">🧩</div><h3 class="text-lg font-bold mb-2">Built on existing behavior</h3><p class="text-sm text-text-secondary">Users already invest in alternative luxury assets through Konvi, starting from low ticket sizes and paying investment-related fees.</p></div>
-        <div class="card p-6 reveal"><div class="text-3xl mb-2">🔨</div><h3 class="text-lg font-bold mb-2">Auction Guarantees are a natural hook</h3><p class="text-sm text-text-secondary">The new auction guarantee category already introduces a repeatable event structure that can anchor a monthly members-only offer.</p></div>
-        <div class="card p-6 reveal"><div class="text-3xl mb-2">🔥</div><h3 class="text-lg font-bold mb-2">A product in addiction</h3><p class="text-sm text-text-secondary">KONVI SUBSCRIPTION ASSET 
-is a new product in addiction to the existing ones, built to find solutions to the problems and doesn't requires additional costs.</p></div>
+      <h2 class="font-display text-2xl md:text-3xl mb-4 md:mb-6 reveal">WHY IT FITS KONVI</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+        <div class="card p-5 md:p-6 reveal"><div class="text-2xl md:text-3xl mb-2">🧩</div><h3 class="text-base md:text-lg font-bold mb-2">Built on existing behavior</h3><p class="text-sm text-text-secondary">Users already invest in alternative luxury assets through Konvi, starting from low ticket sizes and paying investment-related fees.</p></div>
+        <div class="card p-5 md:p-6 reveal"><div class="text-2xl md:text-3xl mb-2">🔨</div><h3 class="text-base md:text-lg font-bold mb-2">Auction Guarantees are a natural hook</h3><p class="text-sm text-text-secondary">The new auction guarantee category already introduces a repeatable event structure that can anchor a monthly members-only offer.</p></div>
+        <div class="card p-5 md:p-6 reveal"><div class="text-2xl md:text-3xl mb-2">🔥</div><h3 class="text-base md:text-lg font-bold mb-2">A product in addition</h3><p class="text-sm text-text-secondary">KONVI SUBSCRIPTION ASSET is a new product in addition to the existing ones, built to find solutions to the problems and doesn't require additional costs.</p></div>
       </div>
-      <div class="card p-5 mt-5 reveal"><p class="text-lg text-text-secondary">This is not a completely new business. It is a packaging innovation on top of Konvi’s existing strengths: exclusivity, curated sourcing, managed assets, and event-driven investing.</p></div>
+      <div class="card p-4 md:p-5 mt-4 md:mt-5 reveal"><p class="text-base md:text-lg text-text-secondary">This is not a completely new business. It is a packaging innovation on top of Konvi’s existing strengths: exclusivity, curated sourcing, managed assets, and event-driven investing.</p></div>
     </div>
   </div>
 
@@ -141,18 +160,18 @@ is a new product in addiction to the existing ones, built to find solutions to t
     <div class="gradient-mesh"><div class="blob" style="width:340px;height:340px;top:-50px;right:-50px;background:#14B8A6;opacity:.08"></div><div class="blob" style="width:240px;height:240px;bottom:-30px;left:10%;background:#F97316;opacity:.07"></div></div>
     <canvas class="particle-canvas-ambient" style="position:absolute;inset:0;z-index:1"></canvas>
     <div class="content">
-      <h2 class="font-display text-3xl mb-6 reveal">HOW THE LOOP WORKS</h2>
-      <div class="grid grid-cols-4 gap-4">
-        <div class="card p-5 reveal"><div class="text-2xl mb-1">1</div><h3 class="font-bold text-lg mb-1">Join</h3><p class="text-sm text-text-secondary">Member subscribes to the asset with a fixed monthly amount.</p></div>
-        <div class="card p-5 reveal"><div class="text-2xl mb-1">2</div><h3 class="font-bold text-lg mb-1">Unlock</h3><p class="text-sm text-text-secondary">Subscribers receive access to the monthly exclusive auction.</p></div>
-        <div class="card p-5 reveal"><div class="text-2xl mb-1">3</div><h3 class="font-bold text-lg mb-1">Compound</h3><p class="text-sm text-text-secondary">Each billing cycle adds new capital to the position, increasing exposure over time and reinforcing the power of compounded returns.</p></div>        
-        <div class="card p-5 reveal"><div class="text-2xl mb-1">4</div><h3 class="font-bold text-lg mb-1">Retain</h3><p class="text-sm text-text-secondary">Recurring access creates habit, anticipation, and lower churn.</p></div>
+      <h2 class="font-display text-2xl md:text-3xl mb-4 md:mb-6 reveal">HOW THE LOOP WORKS</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        <div class="card p-4 md:p-5 reveal flex sm:block items-center gap-4"><div class="text-2xl md:mb-1 w-8 sm:w-auto text-accent-1 font-bold">1</div><div><h3 class="font-bold text-base md:text-lg mb-1">Join</h3><p class="text-sm text-text-secondary">Member subscribes to the asset with a fixed monthly amount.</p></div></div>
+        <div class="card p-4 md:p-5 reveal flex sm:block items-center gap-4"><div class="text-2xl md:mb-1 w-8 sm:w-auto text-accent-1 font-bold">2</div><div><h3 class="font-bold text-base md:text-lg mb-1">Unlock</h3><p class="text-sm text-text-secondary">Subscribers receive access to the monthly exclusive auction.</p></div></div>
+        <div class="card p-4 md:p-5 reveal flex sm:block items-center gap-4"><div class="text-2xl md:mb-1 w-8 sm:w-auto text-accent-1 font-bold">3</div><div><h3 class="font-bold text-base md:text-lg mb-1">Compound</h3><p class="text-sm text-text-secondary">Each billing cycle adds new capital to the position, increasing exposure over time.</p></div></div>        
+        <div class="card p-4 md:p-5 reveal flex sm:block items-center gap-4"><div class="text-2xl md:mb-1 w-8 sm:w-auto text-accent-1 font-bold">4</div><div><h3 class="font-bold text-base md:text-lg mb-1">Retain</h3><p class="text-sm text-text-secondary">Recurring access creates habit, anticipation, and lower churn.</p></div></div>
       </div>
-      <div class="mt-6 grid grid-cols-4 gap-4">
-        <div class="reveal"><div class="mini uppercase tracking-[3px] mb-1">Behavioral effect</div><div class="card p-5 text-base">Investment becomes a monthly ritual rather than a sporadic decision.</div></div>
-        <div class="reveal"><div class="mini uppercase tracking-[3px] mb-1">User payoff</div><div class="card p-5 text-base">Recurring contributions can amplify compounded upside as the position grows month after month.</div></div>
-        <div class="reveal"><div class="mini uppercase tracking-[3px] mb-1">Commercial effect</div><div class="card p-5 text-base">Revenue becomes visible in advance through active subscriptions.</div></div>
-        <div class="reveal"><div class="mini uppercase tracking-[3px] mb-1">Brand effect</div><div class="card p-5 text-base">KONVI SUBSCRIPTION ASSET becomes a club for privileged access, to exclusive opportunities.</div></div>
+      <div class="mt-4 md:mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        <div class="reveal"><div class="mini uppercase tracking-[2px] md:tracking-[3px] mb-1">Behavioral effect</div><div class="card p-4 text-sm md:text-base">Investment becomes a monthly ritual rather than a sporadic decision.</div></div>
+        <div class="reveal"><div class="mini uppercase tracking-[2px] md:tracking-[3px] mb-1">User payoff</div><div class="card p-4 text-sm md:text-base">Recurring contributions can amplify compounded upside as the position grows.</div></div>
+        <div class="reveal"><div class="mini uppercase tracking-[2px] md:tracking-[3px] mb-1">Commercial effect</div><div class="card p-4 text-sm md:text-base">Revenue becomes visible in advance through active subscriptions.</div></div>
+        <div class="reveal"><div class="mini uppercase tracking-[2px] md:tracking-[3px] mb-1">Brand effect</div><div class="card p-4 text-sm md:text-base">KONVI SUBSCRIPTION ASSET becomes a club for privileged access.</div></div>
       </div>
     </div>
   </div>
@@ -160,11 +179,11 @@ is a new product in addiction to the existing ones, built to find solutions to t
   <div class="slide" data-slide="6">
     <div class="gradient-mesh"><div class="blob" style="width:350px;height:350px;top:-60px;right:-60px;background:#FEF3C7;opacity:.08"></div><div class="blob" style="width:260px;height:260px;bottom:-60px;left:-20px;background:#14B8A6;opacity:.07"></div></div>
     <div class="content">
-      <h2 class="font-display text-3xl mb-6 reveal">VALUE TO KONVI</h2>
-      <div class="grid grid-cols-2 gap-5">
-        <div class="card p-6 reveal">
-          <h3 class="text-xl font-bold mb-3">Business upside</h3>
-          <ul class="space-y-2 text-base text-text-secondary list-disc pl-5">
+      <h2 class="font-display text-2xl md:text-3xl mb-4 md:mb-6 reveal">VALUE TO KONVI</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+        <div class="card p-5 md:p-6 reveal">
+          <h3 class="text-lg md:text-xl font-bold mb-3">Business upside</h3>
+          <ul class="space-y-2 text-sm md:text-base text-text-secondary list-disc pl-5">
             <li>Recurring monthly revenue instead of only one-off placement revenue.</li>
             <li>Improved retention thanks to monthly subscription model.</li>
             <li>Higher LTV through an ongoing payment relationship.</li>
@@ -172,9 +191,9 @@ is a new product in addiction to the existing ones, built to find solutions to t
             <li>More predictable operating cash flows.</li>
           </ul>
         </div>
-        <div class="card p-6 reveal">
-          <h3 class="text-xl font-bold mb-3">User upside</h3>
-          <ul class="space-y-2 text-base text-text-secondary list-disc pl-5">
+        <div class="card p-5 md:p-6 reveal">
+          <h3 class="text-lg md:text-xl font-bold mb-3">User upside</h3>
+          <ul class="space-y-2 text-sm md:text-base text-text-secondary list-disc pl-5">
             <li>Simpler investing habit through a fixed monthly amount.</li>
             <li>Continuous exposure instead of waiting for isolated launches.</li>
             <li>Status and privileged access reserved for members.</li>
@@ -189,59 +208,59 @@ is a new product in addiction to the existing ones, built to find solutions to t
   <div class="slide" data-slide="7">
     <div class="gradient-mesh"><div class="blob" style="width:350px;height:350px;top:-80px;right:-90px;background:#F97316;opacity:.09"></div><div class="blob" style="width:240px;height:240px;bottom:-40px;left:0;background:#14B8A6;opacity:.06"></div></div>
     <div class="content">
-      <h2 class="font-display text-3xl mb-6 reveal">ILLUSTRATIVE RETURN LOGIC</h2>
-      <div class="grid grid-cols-3 gap-4 mb-6">
-        <div class="card p-6 text-center reveal"><div class="mini uppercase tracking-[3px]">Assumption</div><div class="text-3xl font-black stat-glow mt-1">100</div><div class="text-sm text-text-secondary mt-1">active subscribers</div></div>
-        <div class="card p-6 text-center reveal"><div class="mini uppercase tracking-[3px]">Assumption</div><div class="text-3xl font-black stat-glow mt-1">€200</div><div class="text-sm text-text-secondary mt-1">monthly contribution</div></div>
-        <div class="card p-6 text-center reveal"><div class="mini uppercase tracking-[3px]">Gross monthly flow</div><div class="text-3xl font-black stat-glow mt-1">€20k</div><div class="text-sm text-text-secondary mt-1">before fees and structure</div></div>
+      <h2 class="font-display text-2xl md:text-3xl mb-4 md:mb-6 reveal">ILLUSTRATIVE RETURN LOGIC</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-4 md:mb-6">
+        <div class="card p-4 md:p-6 text-center reveal"><div class="mini uppercase tracking-[3px]">Assumption</div><div class="text-2xl md:text-3xl font-black stat-glow mt-1">100</div><div class="text-xs md:text-sm text-text-secondary mt-1">active subscribers</div></div>
+        <div class="card p-4 md:p-6 text-center reveal"><div class="mini uppercase tracking-[3px]">Assumption</div><div class="text-2xl md:text-3xl font-black stat-glow mt-1">€200</div><div class="text-xs md:text-sm text-text-secondary mt-1">monthly contribution</div></div>
+        <div class="card p-4 md:p-6 text-center reveal"><div class="mini uppercase tracking-[3px]">Gross monthly flow</div><div class="text-2xl md:text-3xl font-black stat-glow mt-1">€20k-€50k-€100k</div><div class="text-xs md:text-sm text-text-secondary mt-1">before fees and structure</div></div>
       </div>
-      <div class="card p-6 reveal">
-        <div class="grid grid-cols-[150px_1fr_80px] gap-3 items-center mb-3"><div class="text-base">100 members</div><div class="bar-track"><div class="bar-fill" data-width="28"></div></div><div class="text-right text-base">€20k</div></div>
-        <div class="grid grid-cols-[150px_1fr_80px] gap-3 items-center mb-3"><div class="text-base">250 members</div><div class="bar-track"><div class="bar-fill" data-width="62"></div></div><div class="text-right text-base">€50k</div></div>
-        <div class="grid grid-cols-[150px_1fr_80px] gap-3 items-center"><div class="text-base">500 members</div><div class="bar-track"><div class="bar-fill" data-width="100"></div></div><div class="text-right text-base">€100k</div></div>
+      <div class="card p-4 md:p-6 reveal">
+        <div class="grid grid-cols-[90px_1fr_50px] md:grid-cols-[150px_1fr_80px] gap-2 md:gap-3 items-center mb-3"><div class="text-sm md:text-base">100 members</div><div class="bar-track"><div class="bar-fill" data-width="28"></div></div><div class="text-right text-sm md:text-base">€20k</div></div>
+        <div class="grid grid-cols-[90px_1fr_50px] md:grid-cols-[150px_1fr_80px] gap-2 md:gap-3 items-center mb-3"><div class="text-sm md:text-base">250 members</div><div class="bar-track"><div class="bar-fill" data-width="62"></div></div><div class="text-right text-sm md:text-base">€50k</div></div>
+        <div class="grid grid-cols-[90px_1fr_50px] md:grid-cols-[150px_1fr_80px] gap-2 md:gap-3 items-center"><div class="text-sm md:text-base">500 members</div><div class="bar-track"><div class="bar-fill" data-width="100"></div></div><div class="text-right text-sm md:text-base">€100k</div></div>
       </div>
-      <p class="mt-4 text-sm text-text-muted reveal">The point of the model is visibility: with active subscribers, monthly inflow can be estimated before the month starts.</p>
+      <p class="mt-4 text-xs md:text-sm text-text-muted reveal">The point of the model is visibility: with active subscribers, monthly inflow can be estimated before the month starts.</p>
     </div>
   </div>
 
   <div class="slide" data-slide="8">
     <div class="gradient-mesh"><div class="blob" style="width:340px;height:340px;top:-70px;right:-60px;background:#14B8A6;opacity:.08"></div><div class="blob" style="width:260px;height:260px;bottom:-50px;left:-30px;background:#F97316;opacity:.06"></div></div>
     <div class="content">
-      <h2 class="font-display text-3xl mb-6 reveal">WHY MONTHLY SUBSCRIPTION MATTER</h2>
-      <div class="grid grid-cols-3 gap-5">
-        <div class="card p-6 reveal"><div class="text-3xl mb-2">🔥</div><h3 class="text-lg font-bold mb-2">Urgency</h3><p class="text-base text-text-secondary">A scheduled monthly event gives members a reason to stay subscribed and remain attentive.</p></div>
-        <div class="card p-6 reveal"><div class="text-3xl mb-2">👑</div><h3 class="text-lg font-bold mb-2">Exclusivity</h3><p class="text-base text-text-secondary">If the auction is only for subscribers, the subscription becomes access, not just payment.</p></div>
-        <div class="card p-6 reveal"><div class="text-3xl mb-2">🔁</div><h3 class="text-lg font-bold mb-2">Habit</h3><p class="text-base text-text-secondary">The platform gains a rhythm: subscribe, stay active, wait for the drop, bid, repeat.</p></div>
+      <h2 class="font-display text-2xl md:text-3xl mb-4 md:mb-6 reveal">WHY MONTHLY SUBSCRIPTIONS MATTER</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+        <div class="card p-5 md:p-6 reveal"><div class="text-2xl md:text-3xl mb-2">🔥</div><h3 class="text-base md:text-lg font-bold mb-2">Urgency</h3><p class="text-sm md:text-base text-text-secondary">A scheduled monthly event gives members a reason to stay subscribed and remain attentive.</p></div>
+        <div class="card p-5 md:p-6 reveal"><div class="text-2xl md:text-3xl mb-2">👑</div><h3 class="text-base md:text-lg font-bold mb-2">Exclusivity</h3><p class="text-sm md:text-base text-text-secondary">If the auction is only for subscribers, the subscription becomes access, not just payment.</p></div>
+        <div class="card p-5 md:p-6 reveal"><div class="text-2xl md:text-3xl mb-2">🔁</div><h3 class="text-base md:text-lg font-bold mb-2">Habit</h3><p class="text-sm md:text-base text-text-secondary">The platform gains a rhythm: subscribe, stay active, wait for the drop, bid, repeat.</p></div>
       </div>
-      <div class="card p-6 mt-5 reveal"><p class="text-xl leading-snug">The auction is the emotional engine of the product; the subscription is the commercial engine.</p></div>
+      <div class="card p-4 md:p-6 mt-4 md:mt-5 reveal"><p class="text-base md:text-xl leading-snug">The auction is the emotional engine of the product; the subscription is the commercial engine.</p></div>
     </div>
   </div>
 
   <div class="slide" data-slide="9">
     <div class="gradient-mesh"><div class="blob" style="width:330px;height:330px;top:-60px;right:-70px;background:#FEF3C7;opacity:.08"></div><div class="blob" style="width:240px;height:240px;bottom:-60px;left:2%;background:#14B8A6;opacity:.06"></div></div>
     <div class="content">
-      <h2 class="font-display text-3xl mb-6 reveal">THIS SOLVES CAC, CRC, CHURN AND PREDICTION PROBLEMS</h2>
-      <div class="grid grid-cols-3 gap-4 mb-5">
-        <div class="card p-5 reveal"><div class="mini uppercase tracking-[3px]">Today</div><div class="text-xl mt-1">High CAC</div><p class="text-sm text-text-secondary mt-2">Acquiring users is expensive when value depends on one-off campaign activation.</p></div>
-        <div class="card p-5 reveal"><div class="mini uppercase tracking-[3px]">Today</div><div class="text-xl mt-1">High churn risk</div><p class="text-sm text-text-secondary mt-2">Without a monthly reason to return, many users can go inactive after a single investment.</p></div>
-        <div class="card p-5 reveal"><div class="mini uppercase tracking-[3px]">Impact</div><div class="text-xl mt-1">Low forecasting</div><p class="text-sm text-text-secondary mt-2">Irregular capital inflows make planning, retention marketing, and staffing less predictable.</p></div>
+      <h2 class="font-display text-2xl md:text-3xl mb-4 md:mb-6 reveal">SOLVES CAC, CRC, CHURN & PREDICTION</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-4 md:mb-5">
+        <div class="card p-4 md:p-5 reveal"><div class="mini uppercase tracking-[3px]">Today</div><div class="text-lg md:text-xl mt-1">High CAC</div><p class="text-xs md:text-sm text-text-secondary mt-1 md:mt-2">Acquiring users is expensive when value depends on one-off campaign activation.</p></div>
+        <div class="card p-4 md:p-5 reveal"><div class="mini uppercase tracking-[3px]">Today</div><div class="text-lg md:text-xl mt-1">High churn risk</div><p class="text-xs md:text-sm text-text-secondary mt-1 md:mt-2">Without a monthly reason to return, many users can go inactive after a single investment.</p></div>
+        <div class="card p-4 md:p-5 reveal"><div class="mini uppercase tracking-[3px]">Impact</div><div class="text-lg md:text-xl mt-1">Low forecasting</div><p class="text-xs md:text-sm text-text-secondary mt-1 md:mt-2">Irregular capital inflows make planning, retention marketing, and staffing less predictable.</p></div>
       </div>
-      <div class="grid grid-cols-2 gap-5">
-        <div class="card p-6 reveal">
-          <h3 class="text-xl font-bold mb-3">With the subscription asset</h3>
-          <ul class="space-y-2 text-base text-text-secondary list-disc pl-5">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+        <div class="card p-4 md:p-6 reveal">
+          <h3 class="text-lg md:text-xl font-bold mb-3">With the subscription asset</h3>
+          <ul class="space-y-2 text-sm md:text-base text-text-secondary list-disc pl-5">
             <li>LTV increases because the same user contributes repeatedly.</li>
-            <li>Churn decreases becauuse subspription creates a recurring retention.</li>
+            <li>Churn decreases because subscription creates a recurring retention.</li>
             <li>CAC payback improves because revenue is spread.</li>
           </ul>
         </div>
-        <div class="card p-6 reveal">
-          <h3 class="text-xl font-bold mb-3">Strategic implication</h3>
-          <p class="text-base text-text-secondary leading-snug">The result is stronger unit economics, lower inactivity, and a more stable cadence of new capital entering the platform.</p>
-          <div class="mt-4 grid grid-cols-3 gap-3">
-            <div class="bg-black/20 rounded-2xl p-3"><div class="text-lg mt-1">Higher LTV</div></div>
-            <div class="bg-black/20 rounded-2xl p-3"><div class="text-lg mt-1">Lower churn</div></div>
-            <div class="bg-black/20 rounded-2xl p-3"><div class="text-lg mt-1">Predictable inflows</div></div>
+        <div class="card p-4 md:p-6 reveal">
+          <h3 class="text-lg md:text-xl font-bold mb-3">Strategic implication</h3>
+          <p class="text-sm md:text-base text-text-secondary leading-snug">The result is stronger unit economics, lower inactivity, and a more stable cadence of new capital entering the platform.</p>
+          <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3">
+            <div class="bg-black/20 rounded-2xl p-3"><div class="mini">Metric 1</div><div class="text-base md:text-lg mt-1">Higher LTV</div></div>
+            <div class="bg-black/20 rounded-2xl p-3"><div class="mini">Metric 2</div><div class="text-base md:text-lg mt-1">Lower churn</div></div>
+            <div class="bg-black/20 rounded-2xl p-3"><div class="mini">Metric 3</div><div class="text-base md:text-lg mt-1">Predictable inflows</div></div>
           </div>
         </div>
       </div>
@@ -251,16 +270,16 @@ is a new product in addiction to the existing ones, built to find solutions to t
   <div class="slide" data-slide="10">
     <div class="gradient-mesh"><div class="blob" style="width:420px;height:420px;top:-100px;right:-90px;background:#F97316;opacity:.11"></div><div class="blob" style="width:280px;height:280px;bottom:-60px;left:-40px;background:#14B8A6;opacity:.10"></div><div class="blob" style="width:220px;height:220px;top:45%;left:18%;background:#FEF3C7;opacity:.08"></div></div>
     <canvas class="particle-canvas" style="position:absolute;inset:0;z-index:1"></canvas>
-    <div class="content text-center">
-      <h2 class="font-display text-[clamp(1.8rem,3.5vw,3rem)] leading-[1] mb-3 reveal bg-linear-to-br from-accent-1 via-accent-3 to-accent-2 bg-clip-text text-transparent">What I’m Asking For</h2>
-      <p class="text-lg max-w-4xl mx-auto text-text-secondary reveal">Approval to validate this as a new recurring product line, with me leading the concept, launch coordination, and early growth testing.</p>
-      <div class="grid grid-cols-3 gap-5 mt-8">
-        <div class="card p-5 reveal"><div class="mini uppercase tracking-[3px]">Decision</div><div class="text-lg mt-1">Approve pilot</div></div>
-        <div class="card p-5 reveal"><div class="mini uppercase tracking-[3px]">Ownership</div><div class="text-lg mt-1">I lead execution</div></div>
-        <div class="card p-5 reveal"><div class="mini uppercase tracking-[3px]">Compensation</div><div class="text-lg mt-1">Performance-based variable linked to subscription revenue</div></div>
+    <div class="content text-center flex flex-col justify-center min-h-[80vh]">
+      <h2 class="font-display text-[clamp(1.8rem,3.5vw,3rem)] leading-[1] mb-3 md:mb-4 reveal bg-linear-to-br from-accent-1 via-accent-3 to-accent-2 bg-clip-text text-transparent">What I’m Asking For</h2>
+      <p class="text-base md:text-lg max-w-4xl mx-auto text-text-secondary reveal">Approval to validate this as a new recurring product line, with me leading the concept, launch coordination, and early growth testing.</p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 mt-6 md:mt-8 text-left">
+        <div class="card p-4 md:p-5 reveal"><div class="mini uppercase tracking-[3px]">Decision</div><div class="text-base md:text-lg mt-1 font-bold">Approve pilot</div></div>
+        <div class="card p-4 md:p-5 reveal"><div class="mini uppercase tracking-[3px]">Ownership</div><div class="text-base md:text-lg mt-1 font-bold">I lead execution</div></div>
+        <div class="card p-4 md:p-5 reveal"><div class="mini uppercase tracking-[3px]">Compensation</div><div class="text-base md:text-lg mt-1 font-bold">Performance-based variable linked to product revenue</div></div>
       </div>
-      <p class="mt-6 text-base text-text-muted reveal">This is meant to be an addictional prdocut type lauched as a bootstrap side project.</p>
-      <p class="mt-6 text-base text-text-muted reveal">Giuliano Brun</p>
+      <p class="mt-6 text-sm md:text-base text-text-muted reveal">This is meant to be an additional product type launched as a bootstrap side project.</p>
+      <p class="mt-4 md:mt-6 text-sm md:text-base text-text-muted reveal font-bold">Giuliano Brun</p>
     </div>
   </div>
 </div>
@@ -280,9 +299,22 @@ function goToSlide(n){ const prev=document.querySelector('.slide.active'); const
 function changeSlide(dir){ let next=current+dir; if(next<1) next=total; if(next>total) next=1; goToSlide(next); }
 function updateNav(){ document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active', i+1===current)); counter.textContent = current + ' / ' + total; }
 document.addEventListener('keydown',(e)=>{ if(e.key==='ArrowRight'||e.key===' '){ e.preventDefault(); changeSlide(1);} if(e.key==='ArrowLeft'){ e.preventDefault(); changeSlide(-1);} });
+
+// SWIPE LOGIC MIGLIORATA PER MOBILE (permette lo scroll verticale)
 let touchStartX = 0;
-document.addEventListener('touchstart',(e)=>{ touchStartX=e.touches[0].clientX; });
-document.addEventListener('touchend',(e)=>{ const diff=touchStartX-e.changedTouches[0].clientX; if(Math.abs(diff)>50) changeSlide(diff>0?1:-1); });
+let touchStartY = 0;
+document.addEventListener('touchstart',(e)=>{ 
+    touchStartX=e.touches[0].clientX; 
+    touchStartY=e.touches[0].clientY; 
+}, {passive: true});
+document.addEventListener('touchend',(e)=>{ 
+    const diffX=touchStartX-e.changedTouches[0].clientX; 
+    const diffY=touchStartY-e.changedTouches[0].clientY;
+    // Se lo swipe orizzontale è maggiore di quello verticale e supera la soglia, cambia slide
+    if(Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY)) {
+        changeSlide(diffX > 0 ? 1 : -1); 
+    }
+});
 
 // EVENTO ROTELLINA DEL MOUSE CON COOLDOWN
 let lastScrollTime = 0;
