@@ -239,9 +239,9 @@ is a new product in addiction to the existing ones, built to find solutions to t
           <h3 class="text-xl font-bold mb-3">Strategic implication</h3>
           <p class="text-base text-text-secondary leading-snug">The result is stronger unit economics, lower inactivity, and a more stable cadence of new capital entering the platform.</p>
           <div class="mt-4 grid grid-cols-3 gap-3">
-            <div class="bg-black/20 rounded-2xl p-3"><div class="mini">Metric 1</div><div class="text-lg mt-1">Higher LTV</div></div>
-            <div class="bg-black/20 rounded-2xl p-3"><div class="mini">Metric 2</div><div class="text-lg mt-1">Lower churn</div></div>
-            <div class="bg-black/20 rounded-2xl p-3"><div class="mini">Metric 3</div><div class="text-lg mt-1">Predictable inflows</div></div>
+            <div class="bg-black/20 rounded-2xl p-3"><div class="text-lg mt-1">Higher LTV</div></div>
+            <div class="bg-black/20 rounded-2xl p-3"><div class="text-lg mt-1">Lower churn</div></div>
+            <div class="bg-black/20 rounded-2xl p-3"><div class="text-lg mt-1">Predictable inflows</div></div>
           </div>
         </div>
       </div>
@@ -257,7 +257,7 @@ is a new product in addiction to the existing ones, built to find solutions to t
       <div class="grid grid-cols-3 gap-5 mt-8">
         <div class="card p-5 reveal"><div class="mini uppercase tracking-[3px]">Decision</div><div class="text-lg mt-1">Approve pilot</div></div>
         <div class="card p-5 reveal"><div class="mini uppercase tracking-[3px]">Ownership</div><div class="text-lg mt-1">I lead execution</div></div>
-        <div class="card p-5 reveal"><div class="mini uppercase tracking-[3px]">Compensation</div><div class="text-lg mt-1">Performance-based variable linked to product revenue</div></div>
+        <div class="card p-5 reveal"><div class="mini uppercase tracking-[3px]">Compensation</div><div class="text-lg mt-1">Performance-based variable linked to subscription revenue</div></div>
       </div>
       <p class="mt-6 text-base text-text-muted reveal">This is meant to be an addictional prdocut type lauched as a bootstrap side project.</p>
       <p class="mt-6 text-base text-text-muted reveal">Giuliano Brun</p>
@@ -283,6 +283,22 @@ document.addEventListener('keydown',(e)=>{ if(e.key==='ArrowRight'||e.key===' ')
 let touchStartX = 0;
 document.addEventListener('touchstart',(e)=>{ touchStartX=e.touches[0].clientX; });
 document.addEventListener('touchend',(e)=>{ const diff=touchStartX-e.changedTouches[0].clientX; if(Math.abs(diff)>50) changeSlide(diff>0?1:-1); });
+
+// EVENTO ROTELLINA DEL MOUSE CON COOLDOWN
+let lastScrollTime = 0;
+document.addEventListener('wheel', (e) => {
+  const now = new Date().getTime();
+  if (now - lastScrollTime < 800) return; // Aspetta 800ms prima di accettare un nuovo scroll per evitare salti multipli
+  
+  if (e.deltaY > 0) {
+    changeSlide(1); // Scroll giù -> Prossima slide
+  } else if (e.deltaY < 0) {
+    changeSlide(-1); // Scroll sù -> Slide precedente
+  }
+  
+  lastScrollTime = now;
+});
+
 function animateSlide(slide){ slide.querySelectorAll('.reveal').forEach((el,i)=>{ el.style.transition='none'; el.style.opacity='0'; el.style.transform='translateY(20px)'; el.offsetHeight; const delay=i*0.08; el.style.transition=`opacity .35s ease ${delay}s, transform .35s ease ${delay}s`; el.style.opacity='1'; el.style.transform='translateY(0px)'; }); animateSlideEffects(slide); }
 function animateSlideEffects(slide){ slide.querySelectorAll('.bar-fill:not(.fill-init)').forEach((bar,i)=>{ bar.classList.add('fill-init'); bar.style.width='0%'; bar.style.transition=`width .55s ease ${i*0.08}s`; bar.offsetHeight; bar.style.width=bar.dataset.width+'%'; }); }
 document.addEventListener('mousemove',(e)=>{ const s=document.querySelector('.mouse-spotlight'); if(s){ s.style.background = `radial-gradient(600px circle at ${e.clientX}px ${e.clientY}px, rgba(249,115,22,.06), transparent 40%)`; } });
