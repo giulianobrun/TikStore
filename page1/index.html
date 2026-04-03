@@ -122,7 +122,7 @@
           <div class="mini uppercase tracking-[3px] mb-2">Concept</div>
           <p class="text-lg md:text-xl leading-snug text-text">A continuously open subscription asset where members invest a fixed amount every month, keep their position active while subscribed, and receive access to one exclusive auction opportunity each month.</p>
           <div class="grid grid-cols-3 gap-2 md:gap-3 mt-5 md:mt-6">
-            <div class="bg-black/20 rounded-2xl p-3 md:p-4 text-center md:text-left"><div class="text-xl md:text-2xl mb-1">€200</div><div class="mini leading-tight">Example monthly contribution</div></div>
+            <div class="bg-black/20 rounded-2xl p-3 md:p-4 text-center md:text-left"><div class="text-xl md:text-2xl mb-1">€250</div><div class="mini leading-tight">Example monthly contribution</div></div>
             <div class="bg-black/20 rounded-2xl p-3 md:p-4 text-center md:text-left"><div class="text-xl md:text-2xl mb-1">1x</div><div class="mini leading-tight">Members-only auction every month</div></div>
             <div class="bg-black/20 rounded-2xl p-3 md:p-4 text-center md:text-left"><div class="text-xl md:text-2xl mb-1">∞</div><div class="mini leading-tight">Open product, not a one-time sale</div></div>
           </div>
@@ -209,17 +209,51 @@
     <div class="gradient-mesh"><div class="blob" style="width:350px;height:350px;top:-80px;right:-90px;background:#F97316;opacity:.09"></div><div class="blob" style="width:240px;height:240px;bottom:-40px;left:0;background:#14B8A6;opacity:.06"></div></div>
     <div class="content">
       <h2 class="font-display text-2xl md:text-3xl mb-4 md:mb-6 reveal">ILLUSTRATIVE RETURN LOGIC</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-4 md:mb-6">
-        <div class="card p-4 md:p-6 text-center reveal"><div class="mini uppercase tracking-[3px]">Assumption</div><div class="text-2xl md:text-3xl font-black stat-glow mt-1">100</div><div class="text-xs md:text-sm text-text-secondary mt-1">active subscribers</div></div>
-        <div class="card p-4 md:p-6 text-center reveal"><div class="mini uppercase tracking-[3px]">Assumption</div><div class="text-2xl md:text-3xl font-black stat-glow mt-1">€200</div><div class="text-xs md:text-sm text-text-secondary mt-1">monthly contribution</div></div>
-        <div class="card p-4 md:p-6 text-center reveal"><div class="mini uppercase tracking-[3px]">Gross monthly flow</div><div class="text-2xl md:text-3xl font-black stat-glow mt-1">€20k-€50k-€100k</div><div class="text-xs md:text-sm text-text-secondary mt-1">before fees and structure</div></div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-[1fr_2.2fr_2.2fr] gap-3 md:gap-4 mb-4 md:mb-6">
+        
+        <div class="card p-4 md:p-6 flex flex-col justify-center items-center text-center reveal">
+          <div class="mini uppercase tracking-[3px]">Assumption</div>
+          <div class="text-3xl md:text-4xl font-black stat-glow mt-2">100</div>
+          <div class="text-xs md:text-sm text-text-secondary mt-2">active subscribers</div>
+        </div>
+        
+        <div class="card p-4 md:p-6 flex flex-col justify-center items-center text-center reveal">
+          <div class="mini uppercase tracking-[3px]">Compound investment</div>
+          <div class="text-lg md:text-xl lg:text-2xl font-black stat-glow mt-2 tracking-tight">€250 ➔ €500 ➔ €750 ➔ €1000</div>
+          <div class="text-xs md:text-sm text-text-secondary mt-2">monthly contribution makes LTV higher every month</div>
+        </div>
+        
+        <div class="card p-4 md:p-6 flex flex-col justify-center items-center text-center reveal">
+          <div class="mini uppercase tracking-[3px]">Gross monthly flow</div>
+          <div class="text-lg md:text-xl lg:text-2xl font-black stat-glow mt-2 tracking-tight">€25k ➔ €50k ➔ €75k ➔ €100k</div>
+          <div class="text-xs md:text-sm text-text-secondary mt-2">before fees and structure</div>
+        </div>
+        
       </div>
+
       <div class="card p-4 md:p-6 reveal">
-        <div class="grid grid-cols-[90px_1fr_50px] md:grid-cols-[150px_1fr_80px] gap-2 md:gap-3 items-center mb-3"><div class="text-sm md:text-base">100 members</div><div class="bar-track"><div class="bar-fill" data-width="28"></div></div><div class="text-right text-sm md:text-base">€20k</div></div>
-        <div class="grid grid-cols-[90px_1fr_50px] md:grid-cols-[150px_1fr_80px] gap-2 md:gap-3 items-center mb-3"><div class="text-sm md:text-base">250 members</div><div class="bar-track"><div class="bar-fill" data-width="62"></div></div><div class="text-right text-sm md:text-base">€50k</div></div>
-        <div class="grid grid-cols-[90px_1fr_50px] md:grid-cols-[150px_1fr_80px] gap-2 md:gap-3 items-center"><div class="text-sm md:text-base">500 members</div><div class="bar-track"><div class="bar-fill" data-width="100"></div></div><div class="text-right text-sm md:text-base">€100k</div></div>
+        <div class="grid grid-cols-[90px_1fr_50px] md:grid-cols-[150px_1fr_80px] gap-2 md:gap-3 items-center mb-4">
+          <div class="text-sm md:text-base text-text-secondary">1st Month</div>
+          <div class="bar-track"><div class="bar-fill" data-width="25"></div></div>
+          <div class="text-right text-sm md:text-base font-bold">€25k</div>
+        </div>
+        <div class="grid grid-cols-[90px_1fr_50px] md:grid-cols-[150px_1fr_80px] gap-2 md:gap-3 items-center mb-4">
+          <div class="text-sm md:text-base text-text-secondary">2nd Month</div>
+          <div class="bar-track"><div class="bar-fill" data-width="50"></div></div>
+          <div class="text-right text-sm md:text-base font-bold">€50k</div>
+        </div>
+        <div class="grid grid-cols-[90px_1fr_50px] md:grid-cols-[150px_1fr_80px] gap-2 md:gap-3 items-center mb-4">
+          <div class="text-sm md:text-base text-text-secondary">3rd Month</div>
+          <div class="bar-track"><div class="bar-fill" data-width="75"></div></div>
+          <div class="text-right text-sm md:text-base font-bold">€75k</div>
+        </div>
+        <div class="grid grid-cols-[90px_1fr_50px] md:grid-cols-[150px_1fr_80px] gap-2 md:gap-3 items-center">
+          <div class="text-sm md:text-base text-text-secondary">4th Month</div>
+          <div class="bar-track"><div class="bar-fill" data-width="100"></div></div>
+          <div class="text-right text-sm md:text-base font-bold">€100k</div>
+        </div>
       </div>
-      <p class="mt-4 text-xs md:text-sm text-text-muted reveal">The point of the model is visibility: with active subscribers, monthly inflow can be estimated before the month starts.</p>
     </div>
   </div>
 
